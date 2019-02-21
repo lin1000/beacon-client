@@ -1,0 +1,37 @@
+<html>
+    <head>
+            <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+            <meta content="utf-8" http-equiv="encoding">
+            <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+    </head>
+
+    <script>
+            
+        let startTime = performance.now();
+        let logVisit = function() {
+            
+            // Test that we have support
+            if (!navigator.sendBeacon) return true;
+                
+            // URL to send the data to, e.g.
+            let url = 'http://localhost:8080/redis/listTypeMappings';
+                
+            // Data to send
+            let data = new FormData();
+            data.append('start', startTime);
+            data.append('end', performance.now());
+            data.append('url', document.URL);
+                
+            var blob= new Blob([JSON.stringify({'start':startTime,'end':performance.now()})], {type : 'application/json; charset=UTF-8'}); //
+            // Let's go!
+            navigator.sendBeacon(url, blob);
+          };       
+           
+          window.addEventListener('beforeunload', logVisit)
+    </script>   
+
+<body>
+<H2>This is beacon002.html - Recording the StartTime and StayTime and send via Beacon API when user leaving site </H2>
+<li><a href="beacon999.html">Jump to an non-exist page</a></li>
+</body>
+</html>

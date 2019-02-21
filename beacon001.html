@@ -1,0 +1,79 @@
+<html>
+    <head>
+            <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+            <meta content="utf-8" http-equiv="encoding">
+            <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+    </head>
+
+<script>
+        
+    window.addEventListener('unload', sendTrackingPixel_beacon, false);
+    window.addEventListener('unload', sendTrackingPixel_xhr, false);
+    window.addEventListener('unload', sendTrackingPixel_fetch, false);
+    
+
+    function sendTrackingPixel_xhr() {
+        let url = 'http://localhost:8080/redis/listTypeMappings';
+        var client = new XMLHttpRequest();
+        client.open("POST", url , false); // 第三个参数表明是同步的 xhr
+        client.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+        client.send(JSON.stringify({'data':'Mock Data for XMLHttpRequest'}));
+    }
+
+    function sendTrackingPixel_beacon() {
+        let url = 'http://localhost:8080/redis/listTypeMappings';
+        // 创建一个新的 FormData 并添加一个键值对
+        let data = new FormData();
+
+        var blob= new Blob([JSON.stringify({a:9})], {type : 'application/json; charset=UTF-8'}); //
+        data.append('hello', 'world');
+            
+        let result = navigator.sendBeacon(url,blob);
+            
+        if (result) { 
+        console.log('Successfully queued!');
+        } else {
+        console.log('Failure.');
+        }
+
+    }
+
+    function sendTrackingPixel_fetch(){
+
+        let url = 'http://localhost:8080/redis/listTypeMappings';
+        data = {'data':'Mock Data From Fetch'};
+        var response = fetch(url, {
+            method: 'POST', // or 'PUT'
+            mode: 'cors',
+            credentials: 'include',
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers: new Headers({
+              'Content-Type': 'application/json'
+            })
+          })
+        .then(response => {
+            //ok 代表狀態碼在範圍 200-299
+            if (!response.ok) throw new Error(response.statusText)
+            return response.json()
+          })
+        .catch(function(err) {
+            console.log(err);
+        }) 
+        .then(
+            function(myJson) {
+                console.log(myJson);
+              }            
+        )         
+        
+        
+        
+        
+    }
+
+
+</script>
+
+<H2>This is beacon001.html - Testing on the unload behavior of Beacon API</H2>
+<li><a href="beacon002.html">Jump To Beacon002.html</a></li>
+
+</html>
